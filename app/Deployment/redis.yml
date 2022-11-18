@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  labels:
+    app: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      imagePullSecrets:
+      - name: my-registry2
+      containers:
+      - name: redis
+        image: gcr.io/youssefs-project-367822/redis:2
+        ports:
+        - containerPort: 6379
+        # env:
+        # - name: MONGO-INITDB-ROOT-USERNAME
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: mongo-secret
+        #       key: mongo-user
+        # - name: MONGO-INITDB-ROOT-PASSWORD
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: mongo-secret
+        #       key: mongo-password
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+spec:
+  selector:
+    app: redis
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379

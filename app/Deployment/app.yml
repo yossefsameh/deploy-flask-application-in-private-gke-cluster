@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp
+  labels:
+    app: webapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapp
+  template:
+    metadata:
+      labels:
+        app: webapp
+    spec:
+      imagePullSecrets:
+      - name: my-registry2
+      containers:
+      - name: webapp
+        image: gcr.io/youssefs-project-367822/myapp:2
+        ports:
+        - containerPort: 8000
+        env:
+        - name: REDIS_HOST
+          value: redis
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8000
+      targetPort: 8000
+  selector:
+    app: webapp

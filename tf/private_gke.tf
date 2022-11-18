@@ -35,7 +35,7 @@ resource "google_container_node_pool" "my-pool" {
   max_pods_per_node = 30
 
  node_config {
-    #preemptible  = false
+    preemptible  = false
     machine_type = "n1-standard-1"
 
     service_account = google_service_account.clustersa.email
